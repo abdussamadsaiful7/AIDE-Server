@@ -1,7 +1,7 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 require('dotenv').config();
 const port = process.env.PORT || 5050;
 
@@ -50,11 +50,19 @@ async function run() {
             res.send(result);
         })
 
-        app.post('/order', async(req, res)=>{
+        // app.post('/order', async(req, res)=>{
+        //     const newOrder = req.body;
+        //     const result = await orderCollection.insertOne(newOrder);
+        //     res.send(result);
+        // })
+
+        app.post('/order', async (req, res) => {
             const newOrder = req.body;
+            newOrder.totalPrice = newOrder.price * newOrder.quantity; // Calculate totalPrice
             const result = await orderCollection.insertOne(newOrder);
             res.send(result);
-        })
+          });
+          
 
         app.delete('/order/:id', async (req, res) => {
             const id = req.params.id;
