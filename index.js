@@ -28,10 +28,51 @@ async function run() {
         await client.connect();
 
         const productsCollection = client.db('aidreDB').collection('products');
+        const allEmployeeCollection = client.db('aidreDB').collection('allEmployee');
+        const orderCollection = client.db('aidreDB').collection('order');
 
         app.get('/products', async(req, res)=>{
             const cursor =  productsCollection.find();
             const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.post('/products', async (req, res) => {
+            const newProduct = req.body;
+            const result = await productsCollection.insertOne(newProduct);
+            res.send(result);
+        })
+
+        //order
+        app.get('/order', async(req, res)=>{
+            const cursor =  orderCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.post('/order', async(req, res)=>{
+            const newOrder = req.body;
+            const result = await orderCollection.insertOne(newOrder);
+            res.send(result);
+        })
+
+        app.delete('/order/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) };
+            const result = await orderCollection.deleteOne(query);
+            res.send(result)
+        })
+
+        //employee
+        app.get('/allEmployee', async(req, res)=>{
+            const cursor =  allEmployeeCollection.find();
+            const result = await cursor.toArray();
+            res.send(result);
+        })
+
+        app.post('/allEmployee', async (req, res) => {
+            const newEmployee = req.body;
+            const result = await allEmployeeCollection.insertOne(newEmployee);
             res.send(result);
         })
 
